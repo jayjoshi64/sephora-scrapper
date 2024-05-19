@@ -29,8 +29,16 @@ jobs:
       - name: Run a one-line script
         run: pip install pyinstaller click pandas requests backports.functools_lru_cache backports.tarfile
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      # Runs a single command using the runners shell
+      - name: Pyinstaller categorize
+        run: pyinstaller categorize_csv.spec
+
+      # Runs a single command using the runners shell
+      - name: Pyinstaller downloader
+        run: pyinstaller download_reviews.spec
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: dist/*
+          overwrite: true
+
