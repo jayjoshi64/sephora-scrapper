@@ -4,6 +4,7 @@ import os
 import sys
 import re
 import click
+import itertools
 if getattr(sys, 'frozen', False):
     SCRIPT_DIR = os.path.dirname(sys.executable)
 else:
@@ -66,8 +67,11 @@ def main():
                 brand_df = df[df['Brand'] == brand]
                 # Define the filename for the CSV file based on the brand name
 
-                for each_category in brand_df['Category'].unique():
-                    category_df = brand_df[brand_df['Category'] == each_category]
+                for each_category in itertools.chain(["All"], brand_df['Category'].unique()):
+                    if each_category == "All":
+                        category_df = brand_df
+                    else:
+                        category_df = brand_df[brand_df['Category'] == each_category]
                     filename = f"{convert_to_valid_filename(brand)}/{convert_to_valid_filename(each_category)}.csv"
                     file_path = os.path.join(brands_folder,filename)
                     # Save the filtered DataFrame to a CSV file
