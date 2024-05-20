@@ -56,8 +56,8 @@ def main():
 
             # Read the CSV file into a DataFrame
             df = pd.read_csv(os.path.join(folder_path, temp_file_name),dtype={'Eyes': 'str', 'Skin': 'str', 'Skintone': 'str', 'Hair': 'str'})
-            df['Brand'] = df['Brand'].str.lower()  #It was treating different in Unique()
-            
+            df['Brand'] = df['Brand'].str.title()  #It was treating different in Unique()
+             
             # Iterate over unique values in the 'brand' column
             
             for brand in df['Brand'].unique():
@@ -115,6 +115,20 @@ def convert_to_valid_filename(brand_name):
     # Replace special characters with underscores
     return re.sub(r'[^\w]+', '_', brand_name.strip())
  
+
+def capitalize_each_word(string):
+  """Capitalizes each word in a string.
+
+  Args:
+    string: The string to capitalize.
+
+  Returns:
+    A string with each word capitalized.
+  """
+
+  words = string.split()
+  capitalized_words = [word.capitalize() for word in words]
+  return " ".join(capitalized_words)
 
 if __name__ == "__main__":
     main()
