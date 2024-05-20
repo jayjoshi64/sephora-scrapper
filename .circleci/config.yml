@@ -1,0 +1,21 @@
+# Couldn't automatically generate a config from your source code.
+# This is a generic template to serve as a base for your custom config
+# See: https://circleci.com/docs/configuration-reference
+# Stacks detected: cicd:github-actions:.github/workflows
+version: 2.1
+jobs:
+  build:
+    macos:
+      xcode: 14.2.0
+    resource_class: macos.m1.medium.gen1
+
+    steps:
+      # Commands will execute in macOS container
+      # with Xcode 14.2.0 installed
+      - run: xcodebuild -version
+      - run: python --version
+
+workflows:
+  example:
+    jobs:
+      - build
