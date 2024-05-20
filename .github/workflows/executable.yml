@@ -72,3 +72,32 @@ jobs:
           path: dist/*
           overwrite: true
 
+
+  build-windows:
+    # The type of runner that the job will run on
+    name: Pyinstaller Windows
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: pip install pyinstaller click pandas requests backports.functools_lru_cache backports.tarfile
+
+      # Runs a single command using the runners shell
+      - name: Pyinstaller categorize
+        run: pyinstaller categorize_csv.spec
+
+      # Runs a single command using the runners shell
+      - name: Pyinstaller downloader
+        run: pyinstaller download_reviews.spec
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Executables
+          path: dist/*
+          overwrite: true
+

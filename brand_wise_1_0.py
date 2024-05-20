@@ -65,17 +65,18 @@ def main():
                 # Filter the DataFrame for the current brand
                 brand_df = df[df['Brand'] == brand]
                 # Define the filename for the CSV file based on the brand name
-                filename = f"{convert_to_valid_filename(brand)}.csv"
-                
-                file_path = os.path.join(brands_folder,filename)
-                # Save the filtered DataFrame to a CSV file
 
-                if os.path.isfile(file_path):
-                    
-                    brand_df.to_csv(file_path, mode='a', header=False, index=False)
-                else:
-                    # Create a new CSV file for the brand
-                    brand_df.to_csv(file_path, index=False)
+                for each_category in brand_df['Category'].unique():
+                    category_df = brand_df[brand_df['Category'] == each_category]
+                    filename = f"{convert_to_valid_filename(brand)}/{convert_to_valid_filename(each_category)}.csv"
+                    file_path = os.path.join(brands_folder,filename)
+                    # Save the filtered DataFrame to a CSV file
+                    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                    if os.path.isfile(file_path):
+                        category_df.to_csv(file_path, mode='a', header=False, index=False)
+                    else:
+                        # Create a new CSV file for the brand
+                        category_df.to_csv(file_path, index=False)
             
             # Move the parsed file to avoid duplicates
             try:
@@ -93,22 +94,23 @@ def main():
 def sort_brandfiles():
 
     files = os.listdir(brands_folder)
-    brand_csv_files = sorted([file for file in files if file.endswith('.csv')])   #, reverse=True)
+    with click.progressbar(list(os.walk(brands_folder)), label="Sorting csv files...", width=0, item_show_func=lambda p:p) as bar:
+        # os.walk -> Traverse the directory tree in recursive way
+        for root, directories, files in os.walk(brands_folder):
+            # we are only interested in list of files while traversing
+            bar.update(1, os.path.basename(root))
+            for filename in files:
+                # This will traverse through all files
+                if not filename.endswith('.csv'):
+                    # filter out non csv files
+                    continue
 
-    # print("Brand csv files being Sorted")
-    k=0
-    with click.progressbar(brand_csv_files, label="Sorting csv files...", width=0, item_show_func=lambda p:p) as bar:
-        for csv_file in brand_csv_files:
-            k += 1
-
-            # print("{}) {} ".format(k, csv_file) ) 
-            bar.update(1, csv_file)
-
-            file_path = os.path.join(brands_folder,csv_file)
-            
-            brand_df = pd.read_csv(file_path,dtype={'Eyes': 'str', 'Skin': 'str', 'Skintone': 'str', 'Hair': 'str'})           
-            brand_df = brand_df.sort_values(by=['Category','Product'], ascending=[True, True], na_position='first')
-            brand_df.to_csv(file_path, index=False)
+                # Root -> Path where we are traversing currently
+                file_path = os.path.join(root, filename)
+                
+                category_df = pd.read_csv(file_path,dtype={'Eyes': 'str', 'Skin': 'str', 'Skintone': 'str', 'Hair': 'str'})           
+                category_df = category_df.sort_values(by=['Category','Product'], ascending=[True, True], na_position='first')
+                category_df.to_csv(file_path, index=False)
 
 
 def convert_to_valid_filename(brand_name):
