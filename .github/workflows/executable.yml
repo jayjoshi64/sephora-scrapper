@@ -18,6 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   build-arm:
     # The type of runner that the job will run on
+    name: Pyinstaller Mac - M chips
     runs-on: flyci-macos-large-latest-m2
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -43,8 +44,9 @@ jobs:
           path: dist/*
           overwrite: true
 
-  build-arm:
+  build-intel:
     # The type of runner that the job will run on
+    name: Pyinstaller Mac - Intel chips
     runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
