@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-arm:
     # The type of runner that the job will run on
     runs-on: flyci-macos-large-latest-m2
 
@@ -39,6 +39,34 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: Mac-Arm-chip-Executables
+          path: dist/*
+          overwrite: true
+
+  build-arm:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: pip install pyinstaller click pandas requests backports.functools_lru_cache backports.tarfile
+
+      # Runs a single command using the runners shell
+      - name: Pyinstaller categorize
+        run: pyinstaller categorize_csv.spec
+
+      # Runs a single command using the runners shell
+      - name: Pyinstaller downloader
+        run: pyinstaller download_reviews.spec
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mac-Intel-chip-Executables
           path: dist/*
           overwrite: true
 
