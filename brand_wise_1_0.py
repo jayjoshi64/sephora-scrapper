@@ -119,6 +119,8 @@ def sort_brandfiles():
 
 def convert_to_valid_filename(brand_name):
     # Replace special characters with underscores
+    if not brand_name:
+        return "Unknown"
     return re.sub(r'[^\w]+', '_', brand_name.strip())
  
 
