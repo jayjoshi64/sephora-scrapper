@@ -5,6 +5,7 @@ import sys
 import re
 import click
 import itertools
+import math
 if getattr(sys, 'frozen', False):
     SCRIPT_DIR = os.path.dirname(sys.executable)
 else:
@@ -121,6 +122,13 @@ def convert_to_valid_filename(brand_name):
     # Replace special characters with underscores
     if not brand_name:
         return "Unknown"
+        
+    try:
+        if math.isnan(brand_name):
+            return "Unknown"
+    except:
+        pass 
+        
     return re.sub(r'[^\w]+', '_', brand_name.strip())
  
 
